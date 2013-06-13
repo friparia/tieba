@@ -8,4 +8,4 @@ autosign.php是用来收集BDUSS的
 
 把takesign.php放到crontab下每天一次就可以了
 
-欢迎访问http://www.planetmiao.com/friparia/autosign/autosign.php来使用我们的服务器进行自动签到~
+欢迎访问http://www.planetmiao.com/friparia/autosign/autosign.php 来使用我们的服务器进行自动签到~
