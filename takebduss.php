@@ -1,6 +1,7 @@
 <?php
 include "Snoopy.class.php";
-if(!$handle = mysql_connect("数据库地址", "用户名", "密码"))
+include "config.php";
+if(!$handle = mysql_connect($mysql_host, $mysql_user, $mysql_pass))
 {
 	switch(mysql_errno())
 	{
@@ -17,7 +18,7 @@ $kw = mysql_escape_string($_POST['kw']);
 if(isset($_POST['BDUSS']) && $_POST['BDUSS'] != NULL)
 {
 	$BDUSS = mysql_escape_string($_POST['BDUSS']);
-	if(mysql_query("INSERT INTO bduss(username,bduss,kw) VALUES('none', '$BDUSS','$kw')"))
+	if(mysql_query("INSERT INTO bduss(bduss) VALUES('$BDUSS')"))
 	{
 		header("Location:autosign.php?errmsg=已经将您的记录储存下来，可以每日签到了");
 	}
@@ -33,7 +34,7 @@ else if(isset($_POST['username']) && isset($_POST['password']) && $_POST['userna
 	$snoopy->submit($submit_url, $submit_vars);
 	$cookie = $snoopy->cookies;
 	$BDUSS = mysql_escape_string($cookie['BDUSS']);
-	if(mysql_query("INSERT INTO bduss(username,bduss,kw) VALUES('none', '$BDUSS','$kw')")){
+	if(mysql_query("INSERT INTO bduss(bduss) VALUES('$BDUSS')")){
 		header("Location:autosign.php?errmsg=已经将您的记录储存下来，可以每日签到了");
 	}
 }
