@@ -1,6 +1,6 @@
 使用前必看
-
-需要Snoopy的支持，请到http://sourceforge.net/projects/snoopy/下载
+ 
+需要Snoopy的支持，请到http://sourceforge.net/projects/snoopy/ 下载
 
 为了支持更广的，选择了数据库储存而不是直接写到文件中
 
