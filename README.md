@@ -1,3 +1,5 @@
+这个东西好像跪掉了……
+
 使用前必看
  
 需要Snoopy的支持，请到http://sourceforge.net/projects/snoopy/ 下载
