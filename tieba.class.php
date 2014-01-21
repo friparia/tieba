@@ -1,36 +1,37 @@
 <?php
 require_once './Snoopy.class.php';
 class CTieba{
-    private $BDUSS= '';
+    private $_BDUSS= '';
+    private $_snoopy;
 
     public function __construct($BDUSS){
-        $this->BDUSS=$BDUSS;
+        $this->_BDUSS = $BDUSS;
+        $this->_snoopy = new Snoopy;
+        $this->_snoopy->cookies['BDUSS'] = $this->_BDUSS;
     }
 
-    public function login(){
-        $un;
-        $passwd;
-        $vcode_md5;
-        $vcode;
+    public function login($username, $passord, $vcode_md5, $vcode){
     }
 
     public function getTbs(){
-        $url = "http://tieba.baidu.com/dc/common/tbs";
-        $snoopy = new Snoopy;
-        $snoopy->cookies['BDUSS'] = $this->BDUSS;
-        $snoopy->submit($url);
-        $response = (array)json_decode($snoopy->results);
+        $tbs_url = "http://tieba.baidu.com/dc/common/tbs";
+        $this->_snoopy->submit($tbs_url);
+        $response = (array)json_decode($this->_snoopy->results);
         return $response['tbs'];
-
     }
 
     public function sign($kw){
-        $url = "http://tieba.baidu.com/c/c/forum/sign";
-        $dat=array('BDUSS'=>$this->BDUSS,'kw'=>$kw,'tbs'=>$this->getTbs());
-        $snoopy = new Snoopy;
-        $snoopy->fetch($url."?".$this->encrypt($dat));
-        var_dump(json_decode($snoopy->results));
-
+        $sign_url = "http://tieba.baidu.com/c/c/forum/sign";
+        $post_data=array('kw'=>$kw,'tbs'=>$this->getTbs());
+        $this->_snoopy->fetch($sign_url."?".$this->encrypt($post_data));
+        $response = (array)json_decode($this->_snoopy->results);
+        if($response['error_code'] != 0){
+            echo 'failed';
+            return false;
+        }else{
+            echo $kw.'success';
+            return true;
+        }
     }
 
     public function msign(){
@@ -50,3 +51,4 @@ class CTieba{
     }
 }
 
+?>
