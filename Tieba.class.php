@@ -10,8 +10,24 @@ class CTieba{
         $this->_snoopy->cookies['BDUSS'] = $this->_BDUSS;
     }
 
-    public function login($username, $passord, $vcode_md5, $vcode){
+    static public function login($username, $password, $vcode_md5 = null, $vcode = null){
         $login_url  = 'http://tieba.baidu.com/c/s/login';
+        $snoopy = new Snoopy;
+        $submit_vars['un'] = $username;
+        $submit_vars['passwd'] = base64_encode($password);
+        $submit_vars['vcode_md5'] = $vcode_md5;
+        $submit_vars['vcode'] = $vcode;
+        $snoopy->submit($login_url,$submit_vars);
+        $response = (array)json_decode($snoopy->results);
+        if($response['error_code'] != 0){
+            $result['status'] = false;
+            $result['vcode'] = get_object_vars($response['anti']);
+        }else{
+            $result['status'] = true;
+            $user = get_object_vars($response['user']);
+            $result['BDUSS'] = $user['BDUSS'];
+        }
+        return $result;
     }
 
     public function getTbs(){
