@@ -11,6 +11,7 @@ class CTieba{
     }
 
     public function login($username, $passord, $vcode_md5, $vcode){
+        $login_url  = 'http://tieba.baidu.com/c/s/login';
     }
 
     public function getTbs(){
@@ -26,16 +27,46 @@ class CTieba{
         $this->_snoopy->fetch($sign_url."?".$this->encrypt($post_data));
         $response = (array)json_decode($this->_snoopy->results);
         if($response['error_code'] != 0){
-            echo 'failed';
-            return false;
+            $result['status'] = false;
         }else{
-            echo $kw.'success';
-            return true;
+            $result['status'] = true;
         }
+        $result['msg'] = $response['error_msg'];
+        $result['kw'] = $kw;
+        return $result;
+    }
+
+    public function multisign(){
+        $forum_list = $this->getFavForums();
+        $result = array();
+
+        foreach($forum_list as $forum){
+            $forum = (array)$forum;
+            $kw = $forum['name'];
+            $result[] = $this->sign($kw);
+        }
+        return $result;
+    }
+
+    public function getFavForums(){
+        $fav_url = "http://tieba.baidu.com/c/f/forum/like";
+        $post_data = array('tbs'=>$this->getTbs());
+
+        $this->_snoopy->fetch($fav_url."?".$this->encrypt($post_data));
+        $response = (array)json_decode($this->_snoopy->results);
+        return $response['forum_list'];
     }
 
     public function msign(){
-        $url = "http://tieba.baidu.com/c/c/forum/msign";
+        $msign_url = "http://tieba.baidu.com/c/c/forum/msign";
+    }
+
+    public function addPost($content,$kw,$tid){
+        $addpost_url = "http://tieba.baidu.com/c/c/post/add";
+    }
+
+    public function addThread($content,$kw, $title){
+        $addthread_url = "http://tieba.baidu.com/c/c/thread/add";
     }
 
     public function encrypt($s){
