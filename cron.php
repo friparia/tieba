@@ -1,5 +1,6 @@
 <?php
-require_once './Tieba.class.php';
+$base = dirname(dirname(__FILE__)); 
+require_once $base.'./Tieba.class.php';
 date_default_timezone_set("Asia/Shanghai");
 $data = (array)json_decode(file_get_contents('./storing.json'));
 
