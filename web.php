@@ -1,5 +1,6 @@
 <?php
-require_once './Tieba.class.php';
+$base = dirname(__FILE__); 
+require_once $base.'/Tieba.class.php';
 if(!isset($_GET['action'])){
     $action = 'login';
 }else{

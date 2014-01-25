@@ -1,5 +1,6 @@
 <?php
-require_once './Snoopy.class.php';
+$base = dirname(__FILE__); 
+require_once $base.'/Snoopy.class.php';
 class CTieba{
     private $_BDUSS= '';
     private $_snoopy;
