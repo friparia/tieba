@@ -1,4 +1,3 @@
-你可以在[这里](http://www.friparia.com/tieba/web.php) 登陆自己的账号以进行自动签到
 
 #需求
 * [Snoopy](http://sourceforge.net/projects/snoopy/)
@@ -8,5 +7,5 @@
 ```php
 php demo.php
 ```
-* 或者网页端登陆
-浏览器访问`web.php`然后将`cron.php`写入`crontab`中
+* BDUSS储存
+把BDUSS以JSON形式写入到storing.json中，可以设置为数组，然后将`cron.php`写入`crontab`中，便可进行自动签到
