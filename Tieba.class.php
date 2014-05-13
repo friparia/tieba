@@ -11,15 +11,30 @@ class CTieba{
         $this->_snoopy->cookies['BDUSS'] = $this->_BDUSS;
     }
 
+    /*
+     * This function is not available now
+     * 该函数现在无法使用
+     */
     static public function login($username, $password, $vcode_md5 = null, $vcode = null){
-        $login_url  = 'http://tieba.baidu.com/c/s/login';
+        // $login_url  = 'http://c.tieba.baidu.com/c/s/login';
+        // $login_url  = 'http://c.tieba.baidu.com/c/s/login';
         $snoopy = new Snoopy;
         $submit_vars['un'] = $username;
         $submit_vars['passwd'] = base64_encode($password);
+        $submit_vars['_client_type'] = 2;
+        $submit_vars['_client_version'] = '6.0.0';
+        $submit_vars['_phone_imei'] = 237073724323845;
+        $submit_vars['uid'] = '66CEB4A4A29EDFAED594A34F4406FEE5%7C548323427370732';
+        $submit_vars['from'] = 'tieba';
+        $submit_vars['isphone'] = 0;
+        $submit_vars['model'] = 'GT-I9100';
+        $submit_vars['stErrorNums'] = 0;
+        $submit_vars['stMethod'] = 1;
         $submit_vars['vcode_md5'] = $vcode_md5;
         $submit_vars['vcode'] = $vcode;
         $snoopy->submit($login_url,$submit_vars);
         $response = (array)json_decode($snoopy->results);
+        var_dump($response);die;
         if($response['error_code'] != 0){
             $result['status'] = false;
             $result['vcode'] = get_object_vars($response['anti']);
