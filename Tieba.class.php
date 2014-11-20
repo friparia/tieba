@@ -1,52 +1,41 @@
 <?php
+// require dirname(__FILE__).'/Snoopy.class.php';
 require 'vendor/autoload.php';
-namespace Friparia\Ctiba;
 class CTieba{
-    private $_BDUSS= '';
+    private $_headers = array();
+    const TBS_URL = "http://tieba.baidu.com/dc/common/tbs";
+    const SIGN_URL = "http://tieba.baidu.com/c/c/forum/sign";
+    const POST_URL = "http://tieba.baidu.com/c/c/post/add";
+    const MSIGN_URL = "http://tieba.baidu.com/c/c/forum/msign";
+    const ADDTHREAD_URL = "http://tieba.baidu.com/c/c/thread/add";
 
     public function __construct($BDUSS){
-        $this->_BDUSS = $BDUSS;
-    }
-
-    static public function login($username, $password, $vcode_md5 = null, $vcode = null){
-        $login_url  = 'http://tieba.baidu.com/c/s/login';
-        $snoopy = new Snoopy;
-        $submit_vars['un'] = $username;
-        $submit_vars['passwd'] = base64_encode($password);
-        $submit_vars['vcode_md5'] = $vcode_md5;
-        $submit_vars['vcode'] = $vcode;
-        $snoopy->submit($login_url,$submit_vars);
-        $response = (array)json_decode($snoopy->results);
-        if($response['error_code'] != 0){
-            $result['status'] = false;
-            $result['vcode'] = get_object_vars($response['anti']);
-        }else{
-            $result['status'] = true;
-            $user = get_object_vars($response['user']);
-            $result['BDUSS'] = $user['BDUSS'];
-        }
-        return $result;
+        $this->_headers = array(
+            'Cookie' => 'BDUSS='.$BDUSS,
+            'Host'  => 'tieba.baidu.com',
+            'Referer' => 'http://tieba.baidu.com/',
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36',
+        );
     }
 
     public function getTbs(){
-        $tbs_url = "http://tieba.baidu.com/dc/common/tbs";
-        $this->_snoopy->submit($tbs_url);
-        $response = (array)json_decode($this->_snoopy->results);
-        return $response['tbs'];
+        $response = Requests::get(self::TBS_URL, $this->_headers);
+        $response = json_decode($response->body);
+        return $response->tbs;
     }
 
     public function sign($kw){
-        $sign_url = "http://tieba.baidu.com/c/c/forum/sign";
-        $post_data=array('kw'=>$kw,'tbs'=>$this->getTbs());
-        $this->_snoopy->fetch($sign_url."?".$this->encrypt($post_data));
-        $response = (array)json_decode($this->_snoopy->results);
-        if($response['error_code'] != 0){
-            $result['status'] = false;
+        $data = array('kw' => $kw,'tbs' => $this->getTbs());
+        $response = Requests::get(self::SIGN_URL."?".$this->encrypt($data), $this->_headers);
+        $response = json_decode($response->body);
+        $result = new StdClass;
+        if($response->error_code != 0){
+            $result->status = false;
         }else{
-            $result['status'] = true;
+            $result->status = true;
         }
-        $result['msg'] = $response['error_msg'];
-        $result['kw'] = $kw;
+        $result->msg = $response->error_msg;
+        $result->kw = $kw;
         return $result;
     }
 
@@ -69,18 +58,6 @@ class CTieba{
         $this->_snoopy->fetch($fav_url."?".$this->encrypt($post_data));
         $response = (array)json_decode($this->_snoopy->results);
         return $response['forum_list'];
-    }
-
-    public function msign(){
-        $msign_url = "http://tieba.baidu.com/c/c/forum/msign";
-    }
-
-    public function addPost($content,$kw,$tid){
-        $addpost_url = "http://tieba.baidu.com/c/c/post/add";
-    }
-
-    public function addThread($content,$kw, $title){
-        $addthread_url = "http://tieba.baidu.com/c/c/thread/add";
     }
 
     public function encrypt($s){
