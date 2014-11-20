@@ -1,14 +1,11 @@
 <?php
-$base = dirname(__FILE__); 
-require_once $base.'/Snoopy.class.php';
+require 'vendor/autoload.php';
+namespace Friparia\Ctiba;
 class CTieba{
     private $_BDUSS= '';
-    private $_snoopy;
 
     public function __construct($BDUSS){
         $this->_BDUSS = $BDUSS;
-        $this->_snoopy = new Snoopy;
-        $this->_snoopy->cookies['BDUSS'] = $this->_BDUSS;
     }
 
     static public function login($username, $password, $vcode_md5 = null, $vcode = null){
