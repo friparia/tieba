@@ -1,6 +1,6 @@
 {
     "name": "friparia/tieba",
-    "description": "",
+    "description": "Baidu Tieba Auto Sign | 百度贴吧自动登录",
     "authors": [
         {
             "name": "friparia",
@@ -10,5 +10,5 @@
     "require": {
         "php": ">=5.3.0",
         "rmccue/requests": ">=1.0"
-    },
+    }
 }
