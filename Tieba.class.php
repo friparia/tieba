@@ -1,5 +1,4 @@
 <?php
-// require dirname(__FILE__).'/Snoopy.class.php';
 require 'vendor/autoload.php';
 class CTieba{
     private $_headers = array();
