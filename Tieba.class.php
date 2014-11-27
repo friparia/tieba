@@ -7,6 +7,7 @@ class CTieba{
     const POST_URL = "http://tieba.baidu.com/c/c/post/add";
     const MSIGN_URL = "http://tieba.baidu.com/c/c/forum/msign";
     const ADDTHREAD_URL = "http://tieba.baidu.com/c/c/thread/add";
+    const FAV_URL = "http://tieba.baidu.com/c/f/forum/like";
 
     public function __construct($BDUSS){
         $this->_headers = array(
@@ -51,11 +52,10 @@ class CTieba{
     }
 
     public function getFavForums(){
-        $fav_url = "http://tieba.baidu.com/c/f/forum/like";
-        $post_data = array('tbs'=>$this->getTbs());
+        $data = array('tbs'=>$this->getTbs());
+        $response = Requests::get(self::FAV_URL."?".$this->encrypt($data), $this->_headers);
+        $response = (array)json_decode($response->body);
 
-        $this->_snoopy->fetch($fav_url."?".$this->encrypt($post_data));
-        $response = (array)json_decode($this->_snoopy->results);
         return $response['forum_list'];
     }
 
